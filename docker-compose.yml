@@ -1,19 +1,26 @@
 version: "3"
 services:
 
-  javaConsumer:
+  javaconsumer:
     container_name: appRabbitConsumer
     build:
       context: .
       dockerfile: dockerfile_consumer
     depends_on:
       - rabbitmq
+    environment:
+      - rabbit.server=rabbitMQServer
+    ports:
+      - "8080:8080"
     command:
       bash -c "java -jar rabbitmqExample-0.0.1-SNAPSHOT.jar"
     restart: on-failure
 
   rabbitmq:
     container_name: rabbitMQServer
-    image: rabbitmq:3.9.28
+    image: rabbitmq:3.11.9-management
+    environment:
+      - RABBITMQ_MANAGEMENT=ENABLE
     ports:
-      - 5672:5672
+      - "5672:5672"
+      - "15672:15672"
