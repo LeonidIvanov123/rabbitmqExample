@@ -1,0 +1,7 @@
+FROM openjdk
+ENV LC_ALL C.UTF-8
+RUN mkdir /javaconsumer
+COPY target/rabbitmqExample-0.0.1-SNAPSHOT.jar /javaconsumer
+WORKDIR /javaconsumer
+ENV PATH=${PATH}:/javaconsumer
+EXPOSE 5672
