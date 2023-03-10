@@ -8,12 +8,12 @@ services:
       dockerfile: dockerfile_consumer
     depends_on:
       - rabbitmq
-    environment:
-      - rabbit.server=rabbitMQServer
+ #   environment:
+ #     - rabbit.server=rabbitMQServer
     ports:
       - "8080:8080"
     command:
-      bash -c "java -jar rabbitmqExample-0.0.1-SNAPSHOT.jar"
+      bash -c "java -jar /javaconsumer/rabbitmqExample-0.0.2-SNAPSHOT.jar"
     restart: on-failure
 
   rabbitmq:

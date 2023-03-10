@@ -12,8 +12,15 @@ public class MessageController {
     @Autowired
     RabbitTemplate rabbitTemplate;
     @GetMapping("/send")
-    void sendToRabbit(@RequestParam("msgtorabbit") String message){
+    public String sendToRabbit(@RequestParam("msgtorabbit") String message){
         System.out.println("Из контроллера отправляем в очередь...");
         rabbitTemplate.convertAndSend("myTestQueue", message);
+        return "the message is received to queue";
+    }
+
+    @GetMapping("/stat")
+    public String testRabbitApp(){
+        System.out.println("Application rabbitmqexample is UP");
+        return "Application rabbitmqexample is UP";
     }
 }

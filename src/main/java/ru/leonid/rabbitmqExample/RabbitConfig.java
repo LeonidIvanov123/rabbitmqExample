@@ -20,6 +20,7 @@ public class RabbitConfig {
 
     @Bean
     public CachingConnectionFactory connectionFactory(){
+        System.out.println("\nConnect to RabbitMQ server: " + rabbitserver + "\n");
         CachingConnectionFactory connectionFactory = new CachingConnectionFactory(rabbitserver);
         return connectionFactory;
     }
