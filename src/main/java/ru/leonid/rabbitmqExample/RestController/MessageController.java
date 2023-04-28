@@ -13,9 +13,12 @@ public class MessageController {
     RabbitTemplate rabbitTemplate;
     @GetMapping("/send")
     public String sendToRabbit(@RequestParam("msgtorabbit") String message){
-        System.out.println("Из контроллера отправляем в очередь...");
-        rabbitTemplate.convertAndSend("myTestQueue", message);
-        return "the message is received to queue";
+        System.out.println("Из контроллера отправляем в обменник...");
+        rabbitTemplate.setExchange("myExchange");
+        //rabbitTemplate.convertAndSend("myTestQueue", message);
+        for(int i =0; i<10; i++)
+            rabbitTemplate.convertAndSend(message +" " + i);
+        return "the message is received to Exchange";
     }
 
     @GetMapping("/stat")

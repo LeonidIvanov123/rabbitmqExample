@@ -1,10 +1,8 @@
 package ru.leonid.rabbitmqExample;
 
 import com.rabbitmq.client.ConnectionFactory;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageListener;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -34,10 +32,31 @@ public class RabbitConfig {
         return new RabbitTemplate(connectionFactory());
     }
 
-    //объявляем очередь
+    //объявляем очереди
     @Bean
     public Queue myQueue1() {
         return new Queue("myTestQueue");
+    }
+
+    @Bean
+    public Queue logQueue(){
+        return new Queue("myLogQueue");
+    }
+
+    //создали обменник сообщениями
+    @Bean
+    public FanoutExchange fanoutExchange1(){
+        return new FanoutExchange("myExchange");
+        //FanOut - Все сообщения во все очереди, самый быстрый тк не использует ключи маршрутизации
+    }
+    //биндим обе очереди к обменнику
+    @Bean
+    public Binding binding1(){
+        return BindingBuilder.bind(myQueue1()).to(fanoutExchange1());
+    }
+    @Bean
+    public Binding binding2(){
+        return BindingBuilder.bind(logQueue()).to(fanoutExchange1());
     }
 
     //слушатель очереди
@@ -53,6 +72,11 @@ public class RabbitConfig {
             }
         });
         return container;
+    }
+
+    @RabbitListener(queues = "myLogQueue")
+    public void readLogQueue(final Message message){
+        System.out.println("msg from myLogQueue" + new String(message.getBody()));
     }
 
 }
